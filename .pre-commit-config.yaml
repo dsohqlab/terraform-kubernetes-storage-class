@@ -1,0 +1,60 @@
+---
+repos:
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.109.2
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_docs
+        args:
+          - --args=--lockfile=false
+          - --args=--config=.terraform-docs.yml
+      - id: terraform_tflint
+        args:
+          - --args=--only=terraform_deprecated_interpolation
+          - --args=--only=terraform_deprecated_index
+          - --args=--only=terraform_unused_declarations
+          - --args=--only=terraform_comment_syntax
+          - --args=--only=terraform_documented_outputs
+          - --args=--only=terraform_documented_variables
+          - --args=--only=terraform_typed_variables
+          - --args=--only=terraform_module_pinned_source
+          - --args=--only=terraform_naming_convention
+          - --args=--only=terraform_required_version
+          - --args=--only=terraform_required_providers
+          - --args=--only=terraform_standard_module_structure
+          - --args=--only=terraform_workspace_remote
+      - id: terraform_validate
+        args:
+          - --hook-config=--retry-once-with-cleanup=true
+          - --tf-init-args=-upgrade
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-case-conflict
+      - id: check-json
+        files: \.json$
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+        files: \.sh$
+      - id: check-executables-have-shebangs
+        files: \.sh$
+      - id: check-yaml
+        files: \.(yaml|yml)$
+      - id: check-added-large-files
+      - id: pretty-format-json
+        args:
+          - --autofix
+      - id: detect-aws-credentials
+        args:
+          - --allow-missing-credentials
+      - id: detect-private-key
+      - id: double-quote-string-fixer
+        files: \.(yaml|yml|json)$
+      - id: end-of-file-fixer
+        exclude: \.(state|state\.backup)$
+      - id: trailing-whitespace
+        exclude: \.(state|state\.backup)$
+  - repo: https://github.com/renovatebot/pre-commit-hooks
+    rev: 44.9.0
+    hooks:
+      - id: renovate-config-validator
